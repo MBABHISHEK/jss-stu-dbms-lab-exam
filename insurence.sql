@@ -97,18 +97,18 @@ JOIN accident A ON PA.report_no = A.report_no
 WHERE YEAR(A.accident_date) = 2021;
 
 -- 2. Number of accidents involving cars belonging to "Smith"
--- 2. Number of accidents involving cars belonging to "Smith"
-SELECT COUNT(a.report_number) AS num_accidents
-FROM ACCIDENT a
-WHERE a.regno IN (
-    SELECT o.regno
-    FROM OWNS o
-    WHERE o.driver_id# IN (
-        SELECT p.driver_id#
-        FROM PERSON p
-        WHERE p.name = 'Smith'
+SELECT COUNT(report_no) AS num_accidents
+FROM PARTICIPATED
+WHERE reg_no IN (
+    SELECT O.reg_no
+    FROM OWNS O
+    WHERE O.  driver_id IN (
+        SELECT P.driver_id
+        FROM PERSON P
+        WHERE P.driver_name = 'Smith'
     )
 );
+
 
 -- 3. Add a new accident to the database
 INSERT INTO accident VALUES
