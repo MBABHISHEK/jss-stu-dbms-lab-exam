@@ -17,12 +17,8 @@ Queries, View and Trigger
 4. Find the names of sailors who have reserved all boats. 
 5. Find the name and age of the oldest sailor. 
 6. For each boat which was reserved by at least 5 sailors with age >= 40, find the boat id and the average age of such sailors. 
-7. A view that shows names and ratings of all sailors sorted by rating in descending order. 
-8. Create a view that shows the names of the sailors who have reserved a boat on a given date.
-9. Create a view that shows the names and colours of all the boats that have been reserved by a sailor with a specific rating.
-10. A trigger that prevents boats from being deleted If they have active reservations. 
-11. A trigger that prevents sailors with rating less than 3 from reserving a boat.
-12. A trigger that deletes all expired reservations.
+7. Create a view that shows the names and colours of all the boats that have been reserved by a sailor with a specific rating.
+8. A trigger that prevents boats from being deleted If they have active reservations. 
 
 ## Insurance Database 
 2. Consider the database schemas given below.
