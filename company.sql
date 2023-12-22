@@ -96,6 +96,11 @@ WHERE p.d_no = e.d_no AND e.name LIKE "%Scott";
 UPDATE Employee
 SET salary = salary * 1.1
 WHERE ssn IN (SELECT ssn FROM WorksOn WHERE p_no IN (SELECT p_no FROM Project WHERE p_name = 'IoT'));
+-- use this 
+SELECT w.ssn, name, salary AS old_salary, salary * 1.1 AS new_salary
+FROM WorksOn w
+JOIN Employee e ON w.ssn = e.ssn
+WHERE w.p_no = (SELECT p_no FROM Project WHERE p_name = "IOT");
 
 -- 3. Find sum, max, min, and average salary of employees in the 'Accounts' department
 SELECT SUM(salary) AS sal_sum, MAX(salary) AS sal_max, MIN(salary) AS sal_min, AVG(salary) AS sal_avg
