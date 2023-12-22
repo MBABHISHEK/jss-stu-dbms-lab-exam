@@ -82,6 +82,7 @@ INSERT INTO BookAdoption VALUES
 (001, 5, 123456);
 
 
+-- 1. Retrieve Course#, TextBook ISBN, and Title for CS department courses with more than 2 book adoptions
 SELECT c.course, t.bookIsbn, t.book_title
 FROM Course c, BookAdoption ba, TextBook t
 WHERE c.course = ba.course
@@ -94,7 +95,7 @@ AND 2 < (
 )
 ORDER BY t.book_title;
 
-
+-- 2. Retrieve distinct department names where Pearson is the publisher, but not other publishers
 SELECT DISTINCT c.dept
 FROM Course c
 WHERE c.dept IN (
@@ -112,6 +113,7 @@ WHERE c.dept IN (
         AND t.publisher != 'PEARSON'
     );
 
+-- 3. Retrieve names of students who scored the highest in "DBMS"
 SELECT s.name
 FROM Student s, Enroll e, Course c
 WHERE s.regno = e.regno
@@ -124,15 +126,17 @@ AND e.marks IN (
     AND c1.course = e1.course
 );
 
-
+-- 4. Create a view 'CoursesOptedByStudent' displaying courses and marks opted by student "01HF235"
 CREATE VIEW CoursesOptedByStudent AS
 SELECT c.cname, e.marks
 FROM Course c, Enroll e
 WHERE e.course = c.course
 AND e.regno = "01HF235";
 
+-- 5. Retrieve data from the 'CoursesOptedByStudent' view
 SELECT * FROM CoursesOptedByStudent;
 
+-- 6. Trigger 'PreventEnrollment' preventing enrollment if marks are below 40
 DELIMITER //
 CREATE OR REPLACE TRIGGER PreventEnrollment
 BEFORE INSERT ON Enroll
@@ -144,5 +148,7 @@ BEGIN
 END;//
 DELIMITER ;
 
+-- 7. Attempt to insert a record into 'Enroll' with marks below 40 (to test trigger)
 INSERT INTO Enroll VALUES
-("01HF235", 002, 5, 5); 
+("01HF235", 002, 5, 5);  -- This will trigger the prevention due to marks below 40
+
