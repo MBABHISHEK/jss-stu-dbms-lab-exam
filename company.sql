@@ -86,50 +86,66 @@ SELECT * FROM DLocation;
 SELECT * FROM Project;
 SELECT * FROM WorksOn;
 
-SELECT p_no, p_name, name
-FROM Project p, Employee e
-WHERE p.d_no = e.d_no AND e.name LIKE "%Krishna";
-
-SELECT w.ssn, name, salary AS old_salary, salary * 1.1 AS new_salary
-FROM WorksOn w
+-- 1. List all project numbers for projects involving an employee with last name 'Scott'
+SELECT DISTINCT p.p_no
+FROM Project p
+JOIN WorksOn w ON p.p_no = w.p_no
 JOIN Employee e ON w.ssn = e.ssn
-WHERE w.p_no = (SELECT p_no FROM Project WHERE p_name = "IOT");
+WHERE e.name LIKE '%Scott%'
+   OR p.d_no IN (SELECT d_no FROM Department WHERE mgr_ssn IN (SELECT ssn FROM Employee WHERE name LIKE '%Scott%'));
 
+-- 2. Show resulting salaries after a 10% raise for employees working on the 'IoT' project
+UPDATE Employee
+SET salary = salary * 1.1
+WHERE ssn IN (SELECT ssn FROM WorksOn WHERE p_no IN (SELECT p_no FROM Project WHERE p_name = 'IoT'));
+
+-- 3. Find sum, max, min, and average salary of employees in the 'Accounts' department
 SELECT SUM(salary) AS sal_sum, MAX(salary) AS sal_max, MIN(salary) AS sal_min, AVG(salary) AS sal_avg
 FROM Employee e
 JOIN Department d ON e.d_no = d.d_no
-WHERE d.dname = "Accounts";
+WHERE d.dname = 'Accounts';
 
-SELECT Employee.ssn, name, d_no
-FROM Employee
-WHERE NOT EXISTS
-    (SELECT p_no FROM Project p WHERE p.d_no = 1 AND p_no NOT IN
-    	(SELECT p_no FROM WorksOn w WHERE w.ssn = Employee.ssn));
+-- 4. Retrieve the name of each employee who works on all projects controlled by department number 5
+SELECT DISTINCT e.name
+FROM Employee e
+WHERE NOT EXISTS (
+    SELECT p_no
+    FROM Project p
+    WHERE p.d_no = 5
+    AND NOT EXISTS (
+        SELECT w.p_no
+        FROM WorksOn w
+        WHERE w.ssn = e.ssn
+        AND w.p_no = p.p_no
+    )
+);
 
-SELECT d.d_no, COUNT(*)
+-- 5. For each department with more than five employees, retrieve department number and count of employees earning more than Rs. 6,00,000
+SELECT d.d_no, COUNT(*) AS num_high_salary_employees
 FROM Department d
-JOIN Employee e ON e.d_no = d.d_no
-WHERE salary > 600000
-GROUP BY d.d_no
-HAVING COUNT(*) > 1;
+JOIN Employee e ON d.d_no = e.d_no
+WHERE (SELECT COUNT(*) FROM Employee WHERE d_no = d.d_no) > 5
+AND e.salary > 600000
+GROUP BY d.d_no;
 
-CREATE VIEW emp_details AS
-SELECT name, dname, d_loc
+-- 6. Create a view showing name, department name, and location of all employees
+CREATE VIEW EmployeeDetails AS
+SELECT e.name, d.dname AS dept_name, dl.d_loc AS location
 FROM Employee e
 JOIN Department d ON e.d_no = d.d_no
 JOIN DLocation dl ON d.d_no = dl.d_no;
 
-SELECT * FROM emp_details;
-
+-- 7. Create a trigger preventing project deletion if currently being worked on by any employee
 DELIMITER //
-CREATE TRIGGER PreventDelete
+CREATE TRIGGER PreventProjectDelete
 BEFORE DELETE ON Project
 FOR EACH ROW
 BEGIN
     IF EXISTS (SELECT * FROM WorksOn WHERE p_no = old.p_no) THEN
-        SIGNAL SQLSTATE '45000' SET message_text = 'This project has an employee assigned';
+        SIGNAL SQLSTATE '45000' SET message_text = 'This project is currently being worked on by an employee';
     END IF;
 END; //
 DELIMITER ;
+
 
 DELETE FROM Project WHERE p_no = 241563;
