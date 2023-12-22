@@ -87,12 +87,10 @@ SELECT * FROM Project;
 SELECT * FROM WorksOn;
 
 -- 1. List all project numbers for projects involving an employee with last name 'Scott'
-SELECT DISTINCT p.p_no
-FROM Project p
-JOIN WorksOn w ON p.p_no = w.p_no
-JOIN Employee e ON w.ssn = e.ssn
-WHERE e.name LIKE '%Scott%'
-   OR p.d_no IN (SELECT d_no FROM Department WHERE mgr_ssn IN (SELECT ssn FROM Employee WHERE name LIKE '%Scott%'));
+SELECT p_no, p_name, name
+FROM Project p, Employee e
+WHERE p.d_no = e.d_no AND e.name LIKE "%Scott%";
+
 
 -- 2. Show resulting salaries after a 10% raise for employees working on the 'IoT' project
 UPDATE Employee
