@@ -125,11 +125,11 @@ WHERE unitprice = (SELECT MAX(unitprice) FROM Items);
 
 -- 6. A trigger that updates order_amount based on quantity and unit price of order_item:
 DELIMITER $$
-CREATE TRIGGER UpdateOrderAmount
-BEFORE INSERT ON OrderItems
-FOR EACH ROW
+CREATE TRIGGER UpdateOrderAmt
+    AFTER INSERT ON OrderItems
+    FOR EACH ROW
 BEGIN
-    SET NEW.order_amt = NEW.qty * (SELECT unitprice FROM Items WHERE item_id = NEW.item_id);
+    UPDATE Orders SET order_amt = (new.qty * (SELECT DISTINCT unitprice FROM Items NATURAL JOIN OrderItems WHERE item_id = new.item_id)) WHERE Orders.order_id = new.order_id;
 END;
 $$
 DELIMITER ;
