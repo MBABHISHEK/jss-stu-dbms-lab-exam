@@ -99,7 +99,7 @@ INSERT INTO Shipments VALUES
 -- 1. List the Order# and Ship_date for all orders shipped from Warehouse# "W2"
 SELECT order_id, ship_date
 FROM Shipments
-WHERE warehouse_id = (SELECT warehouse_id FROM Warehouses WHERE city = 'W2');
+WHERE warehouse_id = 2;
 
 -- 2. List the Warehouse information from which the Customer named "Kumar" was supplied his orders. Produce a listing of Order#, Warehouse#:
 SELECT o.order_id, s.warehouse_id
