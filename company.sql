@@ -123,7 +123,8 @@ WHERE NOT EXISTS (
     )
 );
 
--- 5. For each department with more than five employees, retrieve department number and count of employees earning more than Rs. 6,00,000
+-- 5. For each department with more than five employees, 
+--retrieve department number and count of employees earning more than Rs. 6,00,000
 SELECT d.d_no, COUNT(*) AS num_high_salary_employees
 FROM Department d
 JOIN Employee e ON d.d_no = e.d_no
@@ -138,7 +139,8 @@ FROM Employee e
 JOIN Department d ON e.d_no = d.d_no
 JOIN DLocation dl ON d.d_no = dl.d_no;
 
--- 7. Create a trigger preventing project deletion if currently being worked on by any employee
+-- 7. Create a trigger preventing project deletion 
+--if currently being worked on by any employee
 DELIMITER //
 CREATE TRIGGER PreventProjectDelete
 BEFORE DELETE ON Project
