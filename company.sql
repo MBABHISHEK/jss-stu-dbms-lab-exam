@@ -45,7 +45,7 @@ CREATE TABLE WorksOn(
 
 INSERT INTO Employee VALUES
 ("01NB235", "Chandan_Krishna","Siddartha Nagar, Mysuru", "Male", 1500000, "01NB235", 5),
-("01NB354", "Employee_2", "Lakshmipuram, Mysuru", "Female", 1200000,"01NB235", 2),
+("01NB354", "Scott", "Lakshmipuram, Mysuru", "Female", 1200000,"01NB235", 2),
 ("02NB254", "Employee_3", "Pune, Maharashtra", "Male", 1000000,"01NB235", 4),
 ("03NB653", "Employee_4", "Hyderabad, Telangana", "Male", 2500000, "01NB354", 5),
 ("04NB234", "Employee_5", "JP Nagar, Bengaluru", "Female", 1700000, "01NB354", 1);
@@ -93,6 +93,7 @@ WHERE p.d_no = e.d_no AND e.name LIKE "%Scott";
 
 
 -- 2. Show resulting salaries after a 10% raise for employees working on the 'IoT' project
+select * from Employee;
 UPDATE Employee
 SET salary = salary * 1.1
 WHERE ssn IN (SELECT ssn FROM WorksOn WHERE p_no IN (SELECT p_no FROM Project WHERE p_name = 'IoT'));
@@ -109,6 +110,16 @@ JOIN Department d ON e.d_no = d.d_no
 WHERE d.dname = 'Accounts';
 
 -- 4. Retrieve the name of each employee who works on all projects controlled by department number 5
+
+
+-- Ensure an employee works on ALL projects under department 5
+INSERT INTO WorksOn VALUES
+("01NB235", 453723, 5), -- Employee Chandan_Krishna works on Product Optimization
+("01NB235", 278345, 6), -- Employee Chandan_Krishna also works on Yield Increase
+
+("02NB254", 453723, 5), -- Employee Employee_3 works on Product Optimization
+("02NB254", 278345, 6); -- Employee Employee_3 also works on Yield Increase
+
 SELECT DISTINCT e.name
 FROM Employee e
 WHERE NOT EXISTS (
@@ -124,7 +135,18 @@ WHERE NOT EXISTS (
 );
 
 -- 5. For each department with more than five employees, 
---retrieve department number and count of employees earning more than Rs. 6,00,000
+-- retrieve department number and count of employees earning more than Rs. 6,00,000
+
+
+
+-- Adding more employees to Department 5 (Production) to have more than 5 employees
+INSERT INTO Employee VALUES
+("05NB123", "Employee_6", "Koramangala, Bengaluru", "Male", 700000, "01NB235", 5),
+("06NB456", "Employee_7", "BTM Layout, Bengaluru", "Female", 650000, "01NB235", 5),
+("07NB789", "Employee_8", "Indiranagar, Bengaluru", "Male", 750000, "01NB354", 5),
+("08NB101", "Employee_9", "Electronic City, Bengaluru", "Female", 800000, "01NB354", 5),
+("09NB111", "Employee_10", "Banashankari, Bengaluru", "Male", 900000, "01NB354", 5);
+
 SELECT d.d_no, COUNT(*) AS num_high_salary_employees
 FROM Department d
 JOIN Employee e ON d.d_no = e.d_no
@@ -138,6 +160,8 @@ SELECT e.name, d.dname AS dept_name, dl.d_loc AS location
 FROM Employee e
 JOIN Department d ON e.d_no = d.d_no
 JOIN DLocation dl ON d.d_no = dl.d_no;
+
+select * from EmployeeDetails;
 
 -- 7. Create a trigger preventing project deletion 
 --if currently being worked on by any employee
