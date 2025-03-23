@@ -96,6 +96,13 @@ INSERT INTO Shipments VALUES
 (004, 0003, "2019-05-16"),
 (005, 0005, "2020-12-23");
 
+select * from Customers;
+select * from Orders;
+select * from items;
+select * from orderitems;
+select * from warehouses;
+select * from shipments;
+
 -- 1. List the Order# and Ship_date for all orders shipped from Warehouse# "W2"
 SELECT order_id, ship_date
 FROM Shipments
@@ -116,8 +123,10 @@ LEFT JOIN Orders o ON c.cust_id = o.cust_id
 GROUP BY c.cname;
 
 -- 4. Delete all orders for the customer named "Kumar":
+select * from Orders;
 DELETE FROM Orders
 WHERE cust_id = (SELECT cust_id FROM Customers WHERE cname = 'Kumar');
+select * from Orders;
 
 -- 5. Find the item with the maximum unit price:
 SELECT * FROM Items
@@ -133,9 +142,14 @@ BEGIN
 END;
 $$
 DELIMITER ;
+-- to check the trigger
+INSERT INTO OrderItems VALUES (001, 0002, 3);
+SELECT * FROM Orders WHERE order_id = 001;
 
 -- 7. Create a view to display orderID and shipment date of all orders shipped from warehouse 5:
 CREATE VIEW OrdersShippedFromWarehouse5 AS
 SELECT order_id, ship_date
 FROM Shipments
 WHERE warehouse_id = 5;
+
+select * from OrdersShippedFromWarehouse5;
