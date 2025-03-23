@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS enrollment;
 CREATE DATABASE enrollment;
 USE enrollment;
@@ -75,12 +76,23 @@ INSERT INTO BookAdoption VALUES
 (004, 3, 278345),
 (001, 6, 426784);
 
+
+select * from student;
+select * from course;
+select * from enroll;
+select * from textbook;
+select * from bookadoption;
+
+
 INSERT INTO TextBook VALUES
 (123456, "Chandan The Autobiography", "Pearson", "Chandan");
 
 INSERT INTO BookAdoption VALUES
 (001, 5, 123456);
 
+
+select * from textbook;
+select * from bookadoption;
 
 -- 1. Retrieve Course#, TextBook ISBN, and Title for CS department courses with more than 2 book adoptions
 SELECT c.course, t.bookIsbn, t.book_title
@@ -138,7 +150,7 @@ SELECT * FROM CoursesOptedByStudent;
 
 -- 6. Trigger 'PreventEnrollment' preventing enrollment if marks are below 40
 DELIMITER //
-CREATE OR REPLACE TRIGGER PreventEnrollment
+CREATE  TRIGGER PreventEnrollment
 BEFORE INSERT ON Enroll
 FOR EACH ROW
 BEGIN
@@ -151,4 +163,3 @@ DELIMITER ;
 -- 7. Attempt to insert a record into 'Enroll' with marks below 40 (to test trigger)
 INSERT INTO Enroll VALUES
 ("01HF235", 002, 5, 5);  -- This will trigger the prevention due to marks below 40
-
