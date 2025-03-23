@@ -120,5 +120,7 @@ BEGIN
     END IF;
 END;//
 
+DELETE FROM Boat WHERE bid=103;
+
 -- Resetting delimiter
 DELIMITER ;
